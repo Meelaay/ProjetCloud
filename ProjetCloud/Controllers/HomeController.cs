@@ -66,5 +66,27 @@ namespace ProjetCloud.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Delete(int id)
+        {
+            var movieToDelete = (from m in _db.Movies
+                where m.Id == id
+                select m).First();
+
+            return View(movieToDelete);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(Movie movieToDelete)
+        {
+            if (!_db.Movies.Local.Contains(movieToDelete))
+                _db.Movies.Attach(movieToDelete);
+            
+            _db.Movies.Remove(movieToDelete);
+
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
