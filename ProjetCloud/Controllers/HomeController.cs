@@ -41,23 +41,29 @@ namespace ProjetCloud.Controllers
         // GET: Home/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var movieToEdit = (from m in _db.Movies
+                               where m.Id == id
+                               select m).First();
+
+            return View(movieToEdit);
         }
 
         // POST: Home/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(Movie movieToEdit)
         {
-            try
-            {
-                // TODO: Add update logic here
+            var originalMovie = (from m in _db.Movies
+                                 where m.Id == movieToEdit.Id
+                                 select m).First();
+            if (!ModelState.IsValid)
+                return View(originalMovie);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+
+
+            _db.Entry(originalMovie).CurrentValues.SetValues(movieToEdit);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
     }
