@@ -30,18 +30,12 @@ namespace ProjetCloud.Controllers
 
         // POST: Home/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create([Bind (Exclude="Id")] Movie movieToCreate)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View();
+            _db.Movies.Add(movieToCreate);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Home/Edit/5
@@ -66,26 +60,5 @@ namespace ProjetCloud.Controllers
             }
         }
 
-        // GET: Home/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Home/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
